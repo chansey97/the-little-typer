@@ -1,0 +1,100 @@
+;; Because ind-Vec is too powerful for this task, it must be
+;; restricted to rule out the need for a base.
+;; This is done by carefully choosing the motive.
+#lang pie
+
+;; consequence
+(claim =consequence
+  (-> Nat Nat
+      U))
+(define =consequence
+  (lambda (n j)
+    (which-Nat n
+      (which-Nat j
+        Trivial
+        (lambda (j-1)
+          Absurd))
+      (lambda (n-1)
+        (which-Nat j
+          Absurd
+          (lambda (j-1)
+            (= Nat n-1 j-1)))))))
+
+(claim =consequence-same
+  (Pi ((n Nat))
+    (=consequence n n)))
+(define =consequence-same
+  (lambda (n)
+    (ind-Nat n
+      (lambda (k)
+        (=consequence k k))
+      sole
+      (lambda (n-1 =consequence_n-1)
+        (same n-1)))))
+
+;; use-Nat
+(claim use-Nat=
+  (Pi ((n Nat)
+       (j Nat))
+    (-> (= Nat n j)
+        (=consequence n j))))
+(define use-Nat=
+  (lambda (n j)
+    (lambda (n=j)
+      (replace n=j
+        (lambda (k)
+          (=consequence n k))
+        (=consequence-same n)))))
+
+
+;; zero-not-add1 (very important to prove Absurd)
+(claim zero-not-add1
+  (Pi ((n Nat))
+    (-> (= Nat zero (add1 n))
+        Absurd)))
+(define zero-not-add1
+  (lambda (n)
+    (use-Nat= zero (add1 n))))
+
+;; front
+(claim mot-front
+  (Pi ((E U)
+       (k Nat))
+    (-> (Vec E k) U)))
+(define mot-front
+  (lambda (E)
+    (lambda (k es)
+      (Pi ((j Nat))
+        (-> (= Nat k (add1 j)) E)))))
+
+(claim step-front
+  (Pi ((E U)
+       (l Nat)
+       (e E)
+       (es (Vec E l)))
+    (-> (mot-front E l es)
+        (mot-front E (add1 l) (vec:: e es)))))
+(define step-front
+  (lambda (E l e es)
+    (lambda (front_es)
+      (lambda (j eq)
+        e))))
+
+;; 相当于实现了vec的head，06-vec-1的first只是对head的简单的封装
+(claim front
+  (Pi ((E U)
+       (n Nat))
+    (-> (Vec E (add1 n)) E)))
+(define front
+  (lambda (E l es)
+    ((ind-Vec (add1 l) es
+              (mot-front E)
+              (lambda (j eq)
+                (ind-Absurd (zero-not-add1 j eq)
+                  E))
+              (step-front E))
+     l (same (add1 l)))))
+
+;; (front Atom 1 (vec:: 'ratatouille
+;;          (vec:: 'kartoffeimad
+;;            vecnil)))

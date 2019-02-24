@@ -1,0 +1,11 @@
+#lang pie
+
+;; first
+(claim first
+  (Pi ((E U)
+       (l Nat))
+    (-> (Vec E (add1 l)) E)))
+(define first
+  (lambda (E l)
+    (lambda (es)
+      (head es))))

@@ -1,0 +1,145 @@
+#lang pie
+
+;; append
+(claim step-append
+  (Pi ((E U))
+    (-> E (List E) (List E)
+        (List E))))
+(define step-append
+  (lambda (E )
+    (lambda (e es append_es )
+      (:: e append_es))))
+
+(claim append
+  (Pi ((E U) )
+    (-> (List E) (List E) 
+        (List E))))
+(define append
+  (lambda (E )
+    (lambda (start end )
+      (rec-List start
+        end
+        (step-append E)))))
+
+;; filter
+(claim step-filter
+  (-> (-> Nat Nat)
+      Nat (List Nat) (List Nat)
+      (List Nat)))
+(define step-filter
+  (lambda (pred)
+    (lambda (h _ filtered)
+      (rec-Nat (pred h)
+        filtered
+        (lambda (n-1 _)
+          (:: h filtered))))))
+
+(claim filter
+  (-> (-> Nat Nat) (List Nat)
+      (List Nat)))
+
+(define filter
+  (lambda (pred es)
+    (rec-List es
+      (the (List Nat) nil)
+      (step-filter pred))))
+
+;; <=?
+(claim zero<=?
+  (-> Nat Nat))
+(define zero<=?
+  (lambda (j)
+      1))
+
+(claim step-<=?
+  (-> Nat (-> Nat Nat)
+      (-> Nat Nat)))
+(define step-<=?
+  (lambda (n-1 n-1<=?)
+    (lambda (j)
+      (rec-Nat j
+        0
+        (lambda (j-1 almost_j-1)
+          (n-1<=? j-1))))))
+
+
+(claim <=? (-> Nat Nat Nat))
+(define <=?
+  (lambda (n j)
+    ((rec-Nat n
+      zero<=?
+      step-<=?) j)))
+
+;; >?
+(claim zero>?
+  (-> Nat Nat))
+(define zero>?
+  (lambda (j)
+      0))
+
+(claim step->?
+  (-> Nat (-> Nat Nat)
+      (-> Nat Nat)))
+(define step->?
+  (lambda (n-1 n-1>?)
+    (lambda (j)
+      (rec-Nat j
+        1
+        (lambda (j-1 almost_j-1)
+          (n-1>? j-1))))))
+
+(claim >? (-> Nat Nat Nat))
+(define >?
+  (lambda (n j)
+    ((rec-Nat n
+      zero>?
+      step->?) j)))
+
+
+;; quickSort
+
+;; quickSort :: Ord a => [a] -> [a]
+;; quickSort [] = []
+;; quickSort [x:xs] = quickSort min ++ [x] quickSort max
+;;         where
+;;             min = filter (<x) xs
+;;             max = filter (>=x) xs
+(claim step-quickSort
+  (-> Nat (List Nat) (List Nat) (List Nat)))
+(define step-quickSort
+  (lambda (x xs sorted_es) ;; sorted_es not a n-1 list! depend on mini max!
+    TODO))
+
+(claim quickSort
+  (-> (List Nat) (List Nat)))
+(define quickSort
+  (lambda (list)
+    (rec-List list
+      (the (List Nat) nil)
+      step-quickSort)))
+
+
+;; wrong
+;; (claim step-quickSort
+;;   (-> Nat (List Nat) (-> (List Nat) (List Nat))
+;;       (-> (List Nat) (List Nat))))
+;; (define step-quickSort
+;;   (lambda (e es sorted_es)
+;;     (lambda (xs)
+;;       (append Nat
+;;               (append Nat
+;;                       (sorted_es (filter (>? e) xs))
+;;                       (:: e nil))
+;;               (sorted_es (filter (<=? e) xs))))))
+
+;; (claim quickSort
+;;   (-> (List Nat) (List Nat)))
+;; (define quickSort
+;;   (lambda (list)
+;;     ((rec-List list
+;;        (the (-> (List Nat) (List Nat))
+;;          (lambda (es) nil))
+;;       step-quickSort) list)))
+
+;; (quickSort (:: 0 (:: 5 (:: 4 (:: 1 (:: 2 (:: 3 (:: 7 (:: 8 nil)))))))))
+

@@ -1,0 +1,24 @@
+#lang pie
+
+;; append
+(claim step-append
+  (Pi ((E U))
+    (-> E (List E) (List E)
+        (List E))))
+(define step-append
+  (lambda (E )
+    (lambda (e es append_es )
+      (:: e append_es))))
+
+(claim append
+  (Pi ((E U) )
+    (-> (List E) (List E) 
+        (List E))))
+(define append
+  (lambda (E )
+    (lambda (start end )
+      (rec-List start
+        end
+        (step-append E)))))
+
+;; (append Atom (:: 'a (:: 'b nil)) (:: 'aa (:: 'bb nil)))

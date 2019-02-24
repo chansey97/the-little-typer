@@ -1,0 +1,23 @@
+#lang pie
+
+;; length
+(claim step-length
+  (Pi ((E U))
+    (-> E (List E) Nat
+        Nat)))
+(define step-length
+  (lambda (E)
+    (lambda (e es length_es)
+      (add1 length_es))))
+
+(claim length
+  (Pi ((E U))
+    (-> (List E) Nat)))
+(define length
+  (lambda (E )
+    (lambda (es )
+      (rec-List es
+        0
+        (step-length E)))))
+
+;; (length Atom (:: 'a (:: 'b nil)))

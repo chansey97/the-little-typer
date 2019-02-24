@@ -1,0 +1,182 @@
+;; Using a separate proof is called extrinsic proof
+#lang pie
+
+;; length
+(claim step-length
+  (Pi ((E U))
+    (-> E (List E) Nat
+        Nat)))
+(define step-length
+  (lambda (E)
+    (lambda (e es length_es)
+      (add1 length_es))))
+
+(claim length
+  (Pi ((E U))
+    (-> (List E) Nat)))
+(define length
+  (lambda (E )
+    (lambda (es )
+      (rec-List es
+        0
+        (step-length E)))))
+
+;; list->vec from list-to-vec-2-foolish.pie
+
+;; replicate
+(claim mot-replicate
+  (-> U Nat
+    U))
+(define mot-replicate
+  (lambda (E k)
+    (Vec E k)))
+
+(claim step-replicate
+  (Pi ((E U)
+       (e E)
+       (l-1 Nat))
+    (-> (mot-replicate E l-1)
+      (mot-replicate E (add1 l-1)))))
+(define step-replicate
+  (lambda (E e l-1)
+    (lambda (step-replicate_l-1)
+      (vec:: e step-replicate_l-1))))
+
+(claim replicate
+  (Pi ((E U)
+       (l Nat))
+    (-> E (Vec E l))))
+(define replicate
+  (lambda (E l)
+    (lambda (e)
+      (ind-Nat l
+        (mot-replicate E)
+        vecnil
+        (step-replicate E e)))))
+
+;; list->vec
+(claim mot-list->vec
+  (Pi ((E U))
+    (-> (List E) U)))
+(define mot-list->vec
+  (lambda (E)
+    (lambda (es)
+      (Vec E (length E es)))))
+
+(claim step-list->vec
+  (Pi ((E U)
+       (e E)
+       (es (List E)))
+    (-> (mot-list->vec E es)
+        (mot-list->vec E (:: e es)))))
+(define step-list->vec
+  (lambda (E e es)
+    (lambda (list->vec_es)
+      (replicate E (length E (:: e es)) e))))
+
+(claim list->vec
+  (Pi ((E U)
+       (es (List E)))
+    (Vec E (length E es))))
+(define list->vec
+  (lambda (E es)
+    (ind-List es
+      (mot-list->vec E)
+      vecnil
+      (step-list->vec E))))
+
+;; --- Now use extrinsic proof ---
+
+;; vec->list
+(claim mot-vec->list
+  (Pi ((E U)
+       (l Nat))
+    (-> (Vec E l)
+        U)))
+(define mot-vec->list
+  (lambda (E l)
+    (lambda (es)
+      (List E))))
+
+(claim step-vec->list
+  (Pi ((E U)
+       (l-1 Nat)
+       (e E)
+       (es (Vec E l-1)))
+    (-> (mot-vec->list E l-1 es)
+        (mot-vec->list E (add1 l-1) (vec:: e es)))))
+(define step-vec->list
+  (lambda (E l-1 e es)
+    (lambda (vec->list_es)
+      (:: e vec->list_es))))
+
+(claim vec->list
+  (Pi ((E U)
+       (l Nat))
+    (-> (Vec E l) (List E))))
+(define vec->list
+  (lambda (E l)
+    (lambda (es)
+      (ind-Vec l es
+               (mot-vec->list E)
+               nil
+               (step-vec->list E)))))
+
+;; list->vec->list=
+(claim mot-list->vec->list=
+  (Pi ((E U))
+    (-> (List E)
+      U)))
+
+(define mot-list->vec->list=
+  (lambda (E es)
+    (= (List E)
+      es
+      (vec->list E
+        (length E es)
+        (list->vec E es)))))
+
+(claim ::-fun
+  (Pi ((E U))
+    (-> E (List E) (List E))))
+
+(define ::-fun
+  (lambda (E)
+    (lambda (e es)
+      (:: e es))))
+
+(claim step-list->vec->list=
+  (Pi ((E U)
+       (e E)
+       (es (List E)))
+    (-> (mot-list->vec->list= E
+          es)
+      (mot-list->vec->list= E
+        (:: e es)))))
+
+(define step-list->vec->list=
+  (lambda (E e es)
+    (lambda (list->vec->list=_es)
+      (cong list->vec->list=_es ; type error发生在这里，而不是foolish定义的地方
+        (::-fun E e))))) ; 没有type stepper的情况下，出错信息非常难读，定义被完全展开，看不到规约过程（书上P259:F50有规约过程）
+;; (define step-list->vec->list=
+;;  (lambda (E e es)
+;;    (lambda (list->vec->list=_es)
+;;      TODO)))
+
+(claim list->vec->list=
+  (Pi ((E U)
+       (es (List E)))
+    (= (List E)
+       es
+       (vec->list E (length E es)
+         (list->vec E es)))))
+
+(define list->vec->list=
+  (lambda (E es)
+    (ind-List es (mot-list->vec->list= E)
+      (same nil)
+      (step-list->vec->list= E))))
+
+;; an extrinsic proof 就像写测试，用证明来程序满足的属性
+

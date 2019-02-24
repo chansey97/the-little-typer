@@ -1,0 +1,90 @@
+#lang pie
+
+;; <=
+(claim zero<=?
+  (-> Nat Nat))
+(define zero<=?
+  (lambda (j)
+    1))
+
+(claim step-<=?
+  (-> Nat (-> Nat Nat)
+      (-> Nat Nat)))
+(define step-<=?
+  (lambda (n-1 n-1<=?)
+    (lambda (j)
+      (rec-Nat j
+        0
+        (lambda (j-1 almost_j-1)
+          (n-1<=? j-1))))))
+
+
+(claim <=? (-> Nat Nat Nat))
+(define <=?
+  (lambda (n j)
+    ((rec-Nat n
+       zero<=?
+       step-<=?) j)))
+
+;; insert :: Ord a => a -> [a] -> [a]
+;; insert x [] = [x]
+;; insert x (y:ys) 
+;;         |  x < y = x:y:ys
+;;         | otherwise = y : insert x ys
+
+(claim step-insert
+  (-> Nat Nat (List Nat) (List Nat)
+      (List Nat)))
+(define step-insert
+  (lambda (x)
+    (lambda (y ys result_ys)
+      (which-Nat (<=? x y)
+        (:: y result_ys)
+        (lambda (_)
+          (:: x (:: y ys) ) )))))
+
+(claim insert
+  (-> Nat (List Nat)
+      (List Nat)))
+(define insert
+  (lambda (x list)
+    (rec-List list
+      (:: x nil)
+      (step-insert x))))
+
+
+(check-same (List Nat)
+            (insert 2 nil ) (:: 2 nil))
+(check-same (List Nat)
+            (insert 0 (:: 1 (:: 3 (:: 4 nil))) ) (:: 0 (:: 1 (:: 3 (:: 4 nil)))))
+(check-same (List Nat)
+            (insert 5 (:: 1 (:: 3 (:: 4 nil))) ) (:: 1 (:: 3 (:: 4 (:: 5 nil)))))
+(check-same (List Nat)
+            (insert 2 (:: 1 (:: 3 (:: 4 nil))) ) (:: 1 (:: 2 (:: 3 (:: 4 nil)))))
+(check-same (List Nat)
+            (insert 3 (:: 1 (:: 3 (:: 4 nil))) ) (:: 1 (:: 3 (:: 3 (:: 4 nil)))))
+
+
+;; insertSort :: Ord a => [a] -> [a]
+;; insertSort [] = []
+;; insertSort (x:xs) = insert x (insertSort xs)
+
+(claim insertSort
+  (-> (List Nat) (List Nat)))
+(define insertSort
+  (lambda (list)
+    (rec-List list
+      (the (List Nat) nil)
+      (lambda (e es res)
+        (insert e res)))))
+
+(check-same (List Nat)
+            (insertSort (:: 2 nil)) (:: 2 nil))
+(check-same (List Nat)
+            (insertSort (:: 0 (:: 1 (:: 3 (:: 4 nil))))) (:: 0 (:: 1 (:: 3 (:: 4 nil)))))
+(check-same (List Nat)
+            (insertSort (:: 5 (:: 1 (:: 3 (:: 4 nil))))) (:: 1 (:: 3 (:: 4 (:: 5 nil)))))
+(check-same (List Nat)
+            (insertSort (:: 2 (:: 1 (:: 3 (:: 4 nil))))) (:: 1 (:: 2 (:: 3 (:: 4 nil)))))
+(check-same (List Nat)
+            (insertSort (:: 3 (:: 1 (:: 3 (:: 4 nil))))) (:: 1 (:: 3 (:: 3 (:: 4 nil)))))

@@ -1,0 +1,33 @@
+#lang pie
+
+;; Another thing that might be true about a type is that all of its
+;; proofs of equality are equal to same. This is called "the K rule", and
+;; it was formulated by Thomas Streicher. Here's how we can say in Pie
+;; that the K rule applies in a particular type:
+(claim HasK
+  (-> U
+      U))
+(define HasK
+  (lambda (X)
+    (Pi ((x X)
+         (p (= X x x)))
+      (= (= X x x) p (same x)))))
+
+;; (Pi ((x Trivial)
+;;      (p (= Trivial x x)))
+;;   (= (= Trivial x x) p (same x)))
+(claim TrivialHasK
+  (HasK Trivial))
+(define TrivialHasK
+  (lambda (x p)
+    (ind-= p
+      (lambda (ignore eq)
+        (= (= Trivial x x) eq (same x)))
+      (same (same sole)))))
+
+;; For a long time, many people also believed that this worked for every
+;; type. K is named this way to resemble J, which is the original name of
+;; ind-=, because it turns out to be a very powerful principle. In fact,
+;; it's just as powerful as UIP - if a type is a set, the K rule applies,
+;; and if the K rule applies, then the type is a set. Here's a proof in
+;; Pie.

@@ -1,0 +1,13 @@
+Pie has the rule that every expression with type Trivial is the same
+as sole, but if it didn't, we might also have something like:
+
+tgt in Trivial ~> tgt'
+mot in (-> Trivial U) ~> mot'
+base in (mot' sole) ~> base'
+----------------------------------------------------------------------------------------------
+(ind-Trivial tgt mot base) synth ~> (the (mot' tgt') (ind-Trivial tgt'
+mot' base'))
+
+but we don't need it due to the eta rule for Trivial.
+
+Thanks David Thrane Christiansen.

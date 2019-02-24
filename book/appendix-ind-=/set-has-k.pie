@@ -1,0 +1,48 @@
+#lang pie
+
+(claim HasK
+  (-> U
+      U))
+(define HasK
+  (lambda (X)
+    (Pi ((x X)
+         (p (= X x x)))
+      (= (= X x x) p (same x)))))
+
+(claim IsSet
+  (-> U
+      U))
+(define IsSet
+  (lambda (X)
+    (Pi ((x X)
+         (y X)
+         (p (= X x y))
+         (q (= X x y)))
+      (= (= X x y) p q))))
+
+
+;; The first direction says that K works for sets. Because sets give
+;; equality for _every_ proof of equality, we can fill in q with same to
+;; get K:
+
+;; (Pi ((X U))
+;;   (-> (Pi ((x X)
+;;            (y X)
+;;            (p (= X x y))
+;;            (q (= X x y)))
+;;         (= (= X x y) p q))
+;;       (Pi ((x X)
+;;            (p (= X x x)))
+;;         (= (= X x x) p (same x)))))
+(claim SetsHaveK
+  (Pi ((X U))
+    (-> (IsSet X)
+        (HasK X))))
+(define SetsHaveK
+  (lambda (X set)
+    (lambda (x p)
+      (set x x p (same x)))))
+
+
+
+

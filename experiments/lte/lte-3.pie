@@ -1,0 +1,47 @@
+#lang pie
+
+(claim <=
+  (-> Nat Nat
+      U))
+(define <=
+  (lambda (j)
+    (iter-Nat j
+      (the (-> Nat U)
+        (lambda (k)
+          Trivial)) ;; 0 <= k
+      (lambda (j-1<=)
+        (lambda (k)
+          (which-Nat k
+            Absurd ;; (add1 j-1) /<= zero
+            (lambda (k-1)
+              (j-1<= k-1))))))))
+
+(claim <=?
+  (Pi ((n Nat) (k Nat))
+    (Either (<= n k) (-> (<= n k) Absurd))))
+(define <=?
+  (lambda (n)
+    (ind-Nat n
+      (lambda (j)
+        (Pi ((k Nat))
+          (Either (<= j k)
+            (-> (<= j k) Absurd))))
+      (lambda (k)
+        (left sole))
+      (lambda (n-1 <=?-of-n-1)
+        (lambda (k)
+          (ind-Nat k
+            (lambda (j)
+              (Either (<= (add1 n-1) j)
+                (-> (<= (add1 n-1) j) Absurd)))
+            (right (lambda (x) x))
+            (lambda (k-1 ignored)
+              (<=?-of-n-1 k-1))))))))
+
+;(<= 1 2)
+;(<= 2 2)
+;(<= 3 2)
+
+;; (<=? 1 2)
+;; (<=? 2 2)
+;; (<=? 3 2)

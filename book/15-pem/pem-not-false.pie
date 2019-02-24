@@ -1,0 +1,29 @@
+#lang pie
+
+;; (claim pem
+;;   (Pi ((X U))
+;;     (Either X
+;;       (-> X Absurd))))
+;; ;; 排中率无法被证明
+
+;; ;; pem的另一种写法是：
+;; (claim pem
+;;   (Pi ((X U))
+;;     (Dec X)))
+
+;; 但pem的双重否定可以被证明
+(claim pem-not-false
+  (Pi ((X U))
+    (-> (-> (Either X
+              (-> X
+                  Absurd))
+            Absurd)
+        Absurd)))
+(define pem-not-false
+  (lambda (X)
+    (lambda (pem-false)
+      (pem-false
+       (right
+        (lambda (x)
+          (pem-false
+           (left x))))))))

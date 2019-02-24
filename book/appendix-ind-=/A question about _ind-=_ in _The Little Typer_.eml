@@ -1,0 +1,315 @@
+Delivered-To: chansey97@gmail.com
+Received: by 2002:a17:90a:a513:0:0:0:0 with SMTP id a19-v6csp2838199pjq;
+        Tue, 12 Feb 2019 17:52:59 -0800 (PST)
+X-Received: by 2002:a24:7f54:: with SMTP id r81mr1137281itc.154.1550022779457;
+        Tue, 12 Feb 2019 17:52:59 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1550022779; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Uax6YU8P69xbBu8VEmMaiUGQav8KypYhx9z4IO6p+7B8vRhxY8nVCZeXtbp8nwPZbX
+         hdH9iQcUN+xsknMd2sUqOKcOV0UWJr48PSmrqK+E3YAk13hMJpM+0mwcsbOyo4AZerMp
+         gY/oh6Ys36+jhXhx37jfDe6+kSw7BRSaYAacZ4TCp7P/NenhPdcH6tor2imlwrh7mgjH
+         dFfNJtq7uQGT7aBnZ3+1P6o61WJneJWgtAZ7mPbYPVkDW9sM8SiEkIBAxfpoVBUj+yfJ
+         UINozDEahkJ71QvLT1ePiunhUG27WcNlxG7R6mLjhZbEAWJzVGQ/VhEN0LToP1V/5gvh
+         zjmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=0cWOb7ytYTnbwMSEemEeFHFRA+Pth1jCSU1IMm3yOfg=;
+        b=I2lPNuR9YKPyX4JDbq0rBluQZeS8qxDcJLdLBt6XiN0rfLcQVHIfKLHkq9V+1tSDw4
+         jJJtsGNMql5M8X6Vh4QeDKIAfuzUy0WSS/5l+Xs7BXvkmMkcm/EZdf/coTrApcJsGg0n
+         +8PgzBr6jjiN6J3F2TG2x6lri4XugwEg6pWdy67072h6Ab2qHo0s1tQboyxw740KFnhj
+         r9Y1iuStyICCmLI8M+JJpMSNrWneto6DIy/7w78DdYtl+HFDdZXxiQkUTJl0nZfkerGg
+         /8dC2Sty4It6dx7DwbVQgtufXo3pRDTbZwUv0jjt2lOZh4neFD5dSYbpB6VzX7zt1QcW
+         Ezjw==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@davidchristiansen-dk.20150623.gappssmtp.com header.s=20150623 header.b=yuhgV2TV;
+       spf=pass (google.com: domain of david@davidchristiansen.dk designates 209.85.220.41 as permitted sender) smtp.mailfrom=david@davidchristiansen.dk
+Return-Path: <david@davidchristiansen.dk>
+Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])
+        by mx.google.com with SMTPS id d13sor34051139jaa.0.2019.02.12.17.52.59
+        for <chansey97@gmail.com>
+        (Google Transport Security);
+        Tue, 12 Feb 2019 17:52:59 -0800 (PST)
+Received-SPF: pass (google.com: domain of david@davidchristiansen.dk designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@davidchristiansen-dk.20150623.gappssmtp.com header.s=20150623 header.b=yuhgV2TV;
+       spf=pass (google.com: domain of david@davidchristiansen.dk designates 209.85.220.41 as permitted sender) smtp.mailfrom=david@davidchristiansen.dk
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=davidchristiansen-dk.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0cWOb7ytYTnbwMSEemEeFHFRA+Pth1jCSU1IMm3yOfg=;
+        b=yuhgV2TVe+kgF0PkVSWtrEm640HkHJ8UVyupVEexUCrSQ2+0piJD9MufbGGNZDaBpJ
+         N5DAHm6wN23VVgdvS3iRt7nA4rGsqAjPNgXdyfvTt+Z8K/YrQWWIHJ1ktePY/2YjcFvM
+         1OuUdwHKF/ryX1saeCkWXAiOLYVQ4dm3aX3n8buoqfuKDZn3FcoMUE52H5K1Lan5hdQc
+         z5qGZuuBzBkzveODc0UYnsySdllVdTtmQMeRAnpfdEFsaDb9yJWwJQ8x5z3quN3O9oCf
+         Dibf69UcnxtHDEhrFD1cd6vEJi9cq5ak7XzaX6BuzyRpMPkI8/fxFQmyJuteUMhNCmxL
+         Ns3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0cWOb7ytYTnbwMSEemEeFHFRA+Pth1jCSU1IMm3yOfg=;
+        b=ukERW4P7mg99UbH+8E/uqmy9RUz0/9pKqbxCEapFAjVoJdC7Nj/1nkeCnLPGM8Plj4
+         zVtYnvAtNhRTh0HfpwbZv7FVOZ3CaSXdexTobAhVNO6ro3G+GyaeUz6aoKuKaZlnM5g7
+         8/c6V7NDTtoKcf4IZA5O/9edlbNT9+ULylmpOzt4BivRyxSLtj2u90wisfqrMRKcFUzX
+         j4bBD5U6CuZmjP8Ev6H6eRe+/UyvcYlWRd643349hX4LrnhFstHSVsp1Tbt1J/cVgixk
+         kv3vJwWvvFzAH+cJwGsxY/x0/A+mhyWpL5EVvtEuFgvnUH0HvsJnEtpYKJknTKwMJ+YZ
+         pqUw==
+X-Gm-Message-State: AHQUAuZRRApV5PLiNj1zkLWhNhJYykX4KlYECdHtbey8zaVfx2oqN/2E
+	Oe29selCc63ddtgXcfdzUFetcz28R4B4HsJgGbTP2ud/vj3XhQ==
+X-Google-Smtp-Source: AHgI3IZ72p57CaVGbWQRHngUIZ7e58CXUW3Cj/GRYYpdmR0+lwGL/m5/pYHQ66LhgojBHN0hzyB4J9Gkt8X1b2ETq9Y=
+X-Received: by 2002:a02:284:: with SMTP id 126mr3798402jau.47.1550022778684;
+ Tue, 12 Feb 2019 17:52:58 -0800 (PST)
+MIME-Version: 1.0
+References: <CAHWTsYkyVvc-GYB088WU421qR1HU+g_X2Vkgajhmb059zzVGqg@mail.gmail.com>
+ <CALUo6_yEdHXwWVt2UsCfkEjrYWDMFwYsbP52G3MJWa0mRuf82w@mail.gmail.com>
+In-Reply-To: <CALUo6_yEdHXwWVt2UsCfkEjrYWDMFwYsbP52G3MJWa0mRuf82w@mail.gmail.com>
+From: David Thrane Christiansen <david@davidchristiansen.dk>
+Date: Tue, 12 Feb 2019 17:52:21 -0800
+Message-ID: <CAF_itEt0duM5maDUJQAqvmAQ3hEO9ZekevXn-0fehSEUV0N3ag@mail.gmail.com>
+Subject: Re: A question about "ind-=" in "The Little Typer"
+To: chansey97@gmail.com
+Cc: Dan Friedman <dfried00@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Dear Siyuan Chen,
+
+Dan forwarded me your message.
+
+> Sorry for disturbing you with this letter.
+
+Sorry it's taken me a while to respond - I've been trying to come up
+with a good example to send.
+
+> I am a programmer and also a big fan of your books (like "Essentials of P=
+rogramming Languages Language" and "The Little series").
+>
+> Thank you (and David) for writing this new book. It's very helpful, espec=
+ially for the people with poor mathematical background like me.
+> I have bought and read the book, it's very excellent indeed. Now I can ev=
+en use Agda to prove some simple theorems, which was impossible before.
+> One of my favorite 10 programming books of all time!
+
+This is high praise! Thank you very much!
+
+> But I have a little confusion about "ind-=3D" which only occurs in Append=
+ix.
+>
+> In Page 395, It says:
+>>
+>> The most powerful eliminator for equality is called ind-=3D: it expresse=
+s induction on evidence of equality. ind-=3D is sometimes called J or path =
+induction. Pie=E2=80=99s ind-=3D treats the FROM as a parameter, rather tha=
+n an index; this version of induction on evidence of equality is sometimes =
+called based path induction.
+>
+>
+> I try to use it to prove some propositions, for example:
+>
+> ;; The following code is the "step" function of incr=3Dadd1
+> (claim step-incr=3Dadd1
+>   (Pi ((n-1 Nat))
+>     (-> (=3D Nat
+>            (incr n-1) ; from
+>            (add1 n-1)) ; to
+>       (=3D Nat
+>          (add1 (incr n-1))
+>          (add1 (add1 n-1))))))
+>
+> (define step-incr=3Dadd1
+>   (lambda (n-1)
+>     (lambda (incr=3Dadd1_n-1)
+>       (replace incr=3Dadd1_n-1  ; using replace
+>         (lambda (k)
+>           (=3D Nat
+>              (add1 (incr n-1))
+>              (add1 k)))
+>         (same (add1 (incr n-1)))))))
+>
+> ;; Now I use ind-=3D instead of replace
+> (define step-incr=3Dadd1
+>   (lambda (n-1)
+>     (lambda (incr=3Dadd1_n-1)
+>       (ind-=3D incr=3Dadd1_n-1 ; using ind-=3D
+>         (lambda (k)
+>           (lambda (ignore) ; ignore t
+>             (=3D Nat
+>              (add1 (incr n-1))
+>              (add1 k))))
+>         (same (add1 (incr n-1)))))))
+>
+> Although it's type checked, I still don't understand its meaning and I do=
+es not feel its power. (You said it's the most powerful eliminator of =3D)
+> "ind-=3D" seems like a general form of "replace"...
+
+ind-=3D is a general form of replace in the same way that ind-Nat is a
+general form of rec-Nat. I can use ind-Nat to implement +, if I want,
+but I can't use rec-Nat to prove something like:
+(Pi ((n Nat))
+  (=3D Nat n (+ n 0)))
+
+In other words, I can use rec-Nat to write a function that computes an
+answer based on a Nat, but I can only use ind-Nat if I want to compute
+something whose _type_ mentions the particular Nat we're working with.
+What you're doing there with ind-=3D is similar to writing + with
+ind-Nat, in that the type ignores the particular value being
+eliminated.
+
+> I can understand that ind-Nat inductive a natural number n with base-case=
+ and step to prove a proposition (an U) depend on n.
+> Similarly, ind-=3D inductive a proof of (=3D X from to) with base-case to=
+ prove a proposition (an U) depend on this proof. (Umm...what's the meaning=
+ of "inductive a proof of (=3D X from to)" ??? (=3D X from to) doesn't like=
+ Nat or List, where is the step??? )
+
+Here, there is no step because evidence of equality does not contain
+any further evidence inside of it. Similarly, Either is not built up
+from smaller Eithers, so ind-Either has no step, but only two bases.
+Pie has the rule that every expression with type Trivial is the same
+as sole, but if it didn't, we might also have something like:
+
+tgt in Trivial ~> tgt'
+mot in (-> Trivial U) ~> mot'
+base in (mot' sole) ~> base'
+---------------------------------------------------------------------------=
+-------------------
+(ind-Trivial tgt mot base) synth ~> (the (mot' tgt') (ind-Trivial tgt'
+mot' base'))
+
+but we don't need it due to the eta rule for Trivial.
+
+We need one base or step for each constructor for an inductive type.
+Whether it is a base or step is really a matter of naming - we use the
+name "base" for those that are not recursive, and "step" when they
+are. But that's our terminology. The general term for "bases and
+steps" is "methods".
+
+> But I can't imagine such a proposition (an U) .
+>
+> What kind of proposition can only be proved by ind-=3D? Or at least it ca=
+n show the power of ind=3D-?
+> Could you give me some examples of these propositions?
+
+These propositions are ones that are about equality itself. This is
+about to get a bit technical, because I've not been able to find
+anything simpler. My apologies.
+
+One thing that might be true about a type is that all of its proofs of
+equality are equal to one another. In newer works, this is called
+"being a set" or "being an H-set". Here's a definition in Pie:
+(claim IsSet
+  (-> U
+    U))
+(define IsSet
+  (=CE=BB (X)
+    (=CE=A0 ((x X)
+        (y X)
+        (p (=3D X x y))
+        (q (=3D X x y)))
+      (=3D (=3D X x y) p q))))
+
+This is not very fun to prove, typically. Here's the second-easiest
+example, which is made much easier by the eta rule for Trivial:
+
+(claim Trivial-IsSet
+  (IsSet Trivial))
+(define Trivial-IsSet
+  (=CE=BB (x y p q)
+    (ind-=3D q (=CE=BB (ignore eq) (=3D (=3D Trivial sole sole) p eq))
+      (ind-=3D p (=CE=BB (ignore eq) (=3D (=3D Trivial sole sole) eq (same =
+sole)))
+        (same (same sole))))))
+
+That example needs to use ind-=3D, because the statement being proved is
+a statement about equality itself. The eta rule was convenient because
+I could basically ignore x and y.
+
+The easiest example is for Absurd:
+(claim Absurd-IsSet
+  (IsSet Absurd))
+(define Absurd-IsSet
+  (=CE=BB (x y p q)
+    (ind-Absurd x (=3D (=3D Absurd x y) p q))))
+
+
+For many years, everyone assumed that every type is a set in this
+sense, but Martin Hofmann and Thomas Streicher proved in the 90s that
+this is not the case. Most of the types we use in programming are
+sets, though, so it's a bit difficult to find good examples of types
+that aren't without getting into the newer homotopy type theory work.
+Sorry! Being a set is also called "UIP", for "uniqueness of identity
+proofs", which means that a proof of equality is unique.
+
+Another thing that might be true about a type is that all of its
+proofs of equality are equal to same. This is called "the K rule", and
+it was formulated by Thomas Streicher. Here's how we can say in Pie
+that the K rule applies in a particular type:
+(claim HasK
+  (-> U
+    U))
+(define HasK
+  (=CE=BB (X)
+    (=CE=A0 ((x X)
+        (p (=3D X x x)))
+      (=3D (=3D X x x) p (same x)))))
+
+For a long time, many people also believed that this worked for every
+type. K is named this way to resemble J, which is the original name of
+ind-=3D, because it turns out to be a very powerful principle. In fact,
+it's just as powerful as UIP - if a type is a set, the K rule applies,
+and if the K rule applies, then the type is a set. Here's a proof in
+Pie.
+
+The first direction says that K works for sets. Because sets give
+equality for _every_ proof of equality, we can fill in q with same to
+get K:
+(claim SetsHaveK
+  (=CE=A0 ((X U))
+    (-> (IsSet X)
+      (HasK X))))
+(define SetsHaveK
+  (=CE=BB (X set)
+    (=CE=BB (x p)
+      (set x x p (same x)))))
+
+The second direction says that, from K, we can get sethood/UIP. This
+requires ind-=3D.
+
+(claim K->Set
+  (=CE=A0 ((X U))
+    (-> (HasK X)
+      (IsSet X))))
+(define K->Set
+  (=CE=BB (X k)
+    (=CE=BB (x y p)
+      (ind-=3D p
+        (=CE=BB (m eq)
+          (=CE=A0 ((q (=3D X x m)))
+            (=3D (=3D X x m) eq q)))
+        (=CE=BB (q)
+          (symm (k x q)))))))
+
+Here's the proof in English:
+
+Let X be type for which the K rule holds, and let x and y be equal Xs.
+Call the evidence of their equality p.
+
+We want to show that, given _any_ other evidence q that x and y are
+equal, p and =3D are equal.
+
+The proof is by induction on p. For the base case, we let p be (same
+x). This proof (same x) is equal to q by applying the K rule.
+
+
+This is a pretty abstract statement, but ind-=3D is mostly useful for
+that kind of abstract thing, which is why we didn't think it was
+appropriate in the book itself. It was in the appendix so that curious
+and attentive readers would have somewhere to go after the rest of the
+book.
+
+Thanks for a good question! Please write back if anything I wrote was
+not sufficiently clear.
+
+David

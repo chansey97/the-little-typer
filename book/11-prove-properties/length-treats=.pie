@@ -1,0 +1,35 @@
+;; Now prove that “Every two equal treat lists have equal lengths.”
+#lang pie
+
+;; length
+(claim step-length
+  (Pi ((E U))
+    (-> E (List E) Nat
+        Nat)))
+(define step-length
+  (lambda (E)
+    (lambda (e es length_es)
+      (add1 length_es))))
+
+(claim length
+  (Pi ((E U))
+    (-> (List E) Nat)))
+(define length
+  (lambda (E )
+    (lambda (es )
+      (rec-List es
+        0
+        (step-length E)))))
+
+;; length-treats=
+(claim length-treats=
+  (Pi ((some-treats (List Atom))
+       (more-treats (List Atom)))
+    (-> (= (List Atom) some-treats more-treats)
+        (= Nat
+          (length Atom some-treats)
+          (length Atom more-treats)))))
+(define length-treats=
+  (lambda (some-treats more-treats)
+    (lambda (treats=)
+      (cong treats= (length Atom)))))

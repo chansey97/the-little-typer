@@ -1,0 +1,36 @@
+#lang pie
+
+;; vec->list
+(claim mot-vec->list
+  (Pi ((E U)
+       (l Nat))
+    (-> (Vec E l)
+        U)))
+(define mot-vec->list
+  (lambda (E l)
+    (lambda (es)
+      (List E))))
+
+(claim step-vec->list
+  (Pi ((E U)
+       (l-1 Nat)
+       (e E)
+       (es (Vec E l-1)))
+    (-> (mot-vec->list E l-1 es)
+        (mot-vec->list E (add1 l-1) (vec:: e es)))))
+(define step-vec->list
+  (lambda (E l-1 e es)
+    (lambda (vec->list_es)
+      (:: e vec->list_es))))
+
+(claim vec->list
+  (Pi ((E U)
+       (l Nat))
+    (-> (Vec E l) (List E))))
+(define vec->list
+  (lambda (E l)
+    (lambda (es)
+      (ind-Vec l es
+               (mot-vec->list E)
+               nil
+               (step-vec->list E)))))

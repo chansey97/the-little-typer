@@ -1,0 +1,57 @@
+#lang pie
+
+;; append
+(claim step-append
+  (Pi ((E U))
+    (-> E (List E) (List E)
+        (List E))))
+(define step-append
+  (lambda (E )
+    (lambda (e es append_es )
+      (:: e append_es))))
+
+(claim append
+  (Pi ((E U) )
+    (-> (List E) (List E) 
+        (List E))))
+(define append
+  (lambda (E )
+    (lambda (start end )
+      (rec-List start
+        end
+        (step-append E)))))
+
+;; snoc
+(claim snoc
+  (Pi ((E U))
+    (-> (List E) E
+        (List E))))
+(define snoc
+  (lambda (E)
+    (lambda (start e)
+      (rec-List start
+        (:: e nil)
+        (step-append E)))))
+
+;; concat
+(claim step-concat
+  (Pi ((E U) )
+    (-> E (List E) (List E)
+        (List E))))
+(define step-concat
+  (lambda (E )
+    (lambda (e es concat_es )
+      (snoc E concat_es e))))
+
+(claim concat
+  (Pi ((E U) )
+    (-> (List E) (List E) 
+        (List E))))
+(define concat
+  (lambda (E )
+    (lambda (start end )
+      (rec-List end
+        start
+        (step-concat E)))))
+
+;; (concat Atom (:: 'a (:: 'b nil)) (:: 'aa (:: 'bb nil)))

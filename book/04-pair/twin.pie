@@ -1,0 +1,17 @@
+#lang pie
+
+(claim twin
+  (Pi ((Y U))
+    (-> Y
+      (Pair Y Y))))
+(define twin
+  (lambda (Y)
+    (lambda (x)
+      (cons x x))))
+
+(claim twin-Atom
+  (-> Atom
+    (Pair Atom Atom)))
+
+(define twin-Atom
+  (twin Atom))

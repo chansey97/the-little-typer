@@ -1,0 +1,17 @@
+#lang pie
+
+(claim first-of-one
+  (Pi ((E U))
+    (-> (Vec E 1) E)))
+(define first-of-one
+  (lambda (E)
+    (lambda (es)
+      (head es))))
+
+(claim first-of-two
+  (Pi ((E U))
+    (-> (Vec E 2) E)))
+(define first-of-two
+  (lambda (E)
+    (lambda (es)
+      (head es))))

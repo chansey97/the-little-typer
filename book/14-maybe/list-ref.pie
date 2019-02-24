@@ -1,0 +1,86 @@
+#lang pie
+
+;; Maybe
+(claim Maybe
+  (-> U U))
+(define Maybe
+  (lambda (X)
+    (Either X Trivial)))
+
+(claim nothing
+  (Pi ((E U))
+    (Maybe E)))
+(define nothing
+  (lambda (E)
+    (right sole)))
+
+(claim just
+  (Pi ((E U))
+    (-> E (Maybe E))))
+(define just
+  (lambda (E e)
+    (left e)))
+
+;; maybe-head
+(claim maybe-head
+  (Pi ((E U))
+    (-> (List E) (Maybe E))))
+(define maybe-head
+  (lambda (E es)
+    (rec-List es
+      (nothing E)
+      (lambda (hd tl head_tl)
+        (just E hd)))))
+
+;; maybe-tail
+(claim maybe-tail
+  (Pi ((E U))
+    (-> (List E) (Maybe (List E)))))
+(define maybe-tail
+  (lambda (E es)
+    (rec-List es
+      (nothing (List E))
+      (lambda (hd tl tail_tl)
+        (just (List E) tl)))))
+
+;; list-ref
+(claim step-list-ref
+  (Pi ((E U))
+    (-> Nat (-> (List E)
+                (Maybe E))
+        (-> (List E)
+            (Maybe E)))))
+(define step-list-ref
+  (lambda (E)
+    (lambda (n-1 list-ref_n-1)
+      (lambda (es)
+        (ind-Either (maybe-tail E es)
+          (lambda (maybe_tl)
+            (Maybe E))
+          (lambda (tl)
+            (list-ref_n-1 tl))
+          (lambda (empty)
+            (nothing E)))))))
+
+(claim list-ref
+  (Pi ((E U))
+    (-> Nat (List E)
+        (Maybe E))))
+(define list-ref
+  (lambda (E n)
+    (rec-Nat n
+      (maybe-head E)
+      (step-list-ref E))))
+
+
+;; (claim sandwich
+;;   (-> Atom Atom))
+;; (define sandwich
+;;   (lambda (which-sandwich)
+;;     'delicious))
+
+;; (list-ref Atom zero
+;;           (:: 'ratatouille
+;;             (:: 'kartoffeimad
+;;               (:: (sandwich 'hero)
+;;                 (:: 'prinsesstarta nil)))))

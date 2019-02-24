@@ -1,0 +1,18 @@
+#lang pie
+
+;; define rec-Nat using ind-Nat
+(claim also-rec-Nat
+  (Pi ((X U))
+    (-> Nat
+        X
+        (-> Nat X
+            X)
+        X)))
+(define also-rec-Nat
+  (lambda (X)
+    (lambda (target base step)
+      (ind-Nat target
+        (lambda (k)
+          X)
+        base
+        step))))

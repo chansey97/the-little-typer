@@ -1,0 +1,13 @@
+#lang pie
+
+(claim flip
+  (Pi ((A U)
+       (D U))
+    (-> (Pair A D)
+      (Pair D A))))
+
+(define flip
+  (lambda(A D)
+    (lambda (p)
+      (cons (cdr p) (car p)))))
+

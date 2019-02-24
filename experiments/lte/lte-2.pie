@@ -1,0 +1,32 @@
+#lang pie
+
+;; mylte : Nat -> Nat -> Nat
+;; mylte Z j = 1
+;; mylte (S k) Z = 0
+;; mylte (S k) (S j) = mylte k j
+
+(claim zero<=?
+  (-> Nat Nat))
+(define zero<=?
+  (lambda (j)
+      1))
+
+(claim <=? (-> Nat Nat Nat))
+(define <=?
+  (lambda (n)
+    (rec-Nat n
+      zero<=?
+      (lambda (n-1 n-1<=?)
+        (lambda (j)
+          (rec-Nat j 
+            0
+            (lambda (j-1 almost_j-1)
+              (n-1<=? j-1))))))))
+
+(check-same Nat (<=? 2 4) 1)
+(check-same Nat (<=? 4 2) 0)
+(check-same Nat (<=? 1 0) 0)
+(check-same Nat (<=? 0 1) 1)
+
+(check-same Nat (<=? 0 0) 1)
+(check-same Nat (<=? 1 1) 1)

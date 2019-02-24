@@ -1,0 +1,47 @@
+#lang pie
+
+;; Maybe
+(claim Maybe
+  (-> U U))
+(define Maybe
+  (lambda (X)
+    (Either X Trivial)))
+
+(claim nothing
+  (Pi ((E U))
+    (Maybe E)))
+(define nothing
+  (lambda (E)
+    (right sole)))
+
+(claim just
+  (Pi ((E U))
+    (-> E (Maybe E))))
+(define just
+  (lambda (E e)
+    (left e)))
+
+;; Fin
+(claim Fin
+  (-> Nat U))
+(define Fin
+  (lambda (n)
+    (iter-Nat n
+      Absurd
+      Maybe)))
+
+(claim fzero
+  (Pi ((n Nat))
+    (Fin (add1 n))))
+(define fzero
+  (lambda (n)
+    (nothing (Fin n))))
+
+(claim fadd1
+  (Pi ((n Nat))
+    (-> (Fin n)
+        (Fin (add1 n)))))
+(define fadd1
+  (lambda (n)
+    (lambda (i-1)
+      (just (Fin n) i-1))))

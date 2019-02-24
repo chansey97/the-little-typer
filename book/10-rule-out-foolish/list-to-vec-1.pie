@@ -1,0 +1,39 @@
+#lang pie
+
+;; (claim test-sigma
+;;   (Pi ((E U))
+;;     (Sigma ((l Nat))
+;;       (Vec E l))))
+;; (define test-sigma
+;;   (lambda (e)
+;;     (cons 0 vecnil)))
+
+;; list->vec
+(claim step-list->vec
+  (Pi ((E U))
+    (-> E (List E) (Sigma ((l Nat))
+                     (Vec E l))
+        (Sigma ((l Nat)) ; because the point of using E is to have a pair whose car is the entire length of the cdr.
+          (Vec E l)))))  ; Making the car larger does not change the type.
+(define step-list->vec
+  (lambda (E)
+    (lambda (e es list->vec_es)
+      (cons (add1 (car list->vec_es))
+        (vec:: e (cdr list->vec_es))))))
+
+;; But the type given for list->vec is not specific enough. (没有在类型层面体现出Vec的长度)
+(claim list->vec
+  (Pi ((E U))
+    (-> (List E)
+        (Sigma ((l Nat))
+          (Vec E l)))))
+(define list->vec
+  (lambda (E es)
+    (rec-List es ; 注意：这里使用了rec-List，而不是ind-List
+      (the (Sigma ((l Nat))
+          (Vec E l))
+        (cons 0 vecnil)) 
+      (step-list->vec E))))
+
+;; (list->vec Atom (:: 'beans (:: 'tomato nil)))
+;; (cdr (list->vec Atom (:: 'beans (:: 'tomato nil))))

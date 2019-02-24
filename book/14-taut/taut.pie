@@ -1,0 +1,54 @@
+;; Define a function that determines whether another function that accepts any number of Eithers always returns left.
+#lang pie
+
+(claim Two
+  U)
+(define Two
+  (Either Trivial Trivial))
+
+(claim Two-Fun
+  (-> Nat U))
+(define Two-Fun
+  (lambda (n)
+    (iter-Nat n
+      Two
+      (lambda (type)
+        (-> Two type)))))
+
+(claim both-left
+  (-> Two Two
+      Two))
+(define both-left
+  (lambda (a b)
+    (ind-Either a
+      (lambda (c)
+        Two)
+      (lambda (left-sole)
+        b)
+      (lambda (right-sole)
+        (right sole)))))
+
+(claim step-taut
+  (Pi ((n-1 Nat))
+    (-> (-> (Two-Fun n-1)
+            Two)
+        (-> (Two-Fun (add1 n-1))
+            Two))))
+(define step-taut
+  (lambda (n-1 taut_n-1)
+    (lambda (f)
+      (both-left
+       (taut_n-1 (f (left sole)))
+       (taut_n-1 (f (right sole)))))))
+
+(claim taut
+  (Pi ((n Nat))
+    (-> (Two-Fun n) Two)))
+(define taut
+  (lambda (n)
+    (ind-Nat n
+      (lambda (k)
+        (-> (Two-Fun k) Two))
+      (lambda (x)
+        x)
+      step-taut)))

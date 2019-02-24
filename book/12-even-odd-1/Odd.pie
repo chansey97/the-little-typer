@@ -1,0 +1,33 @@
+#lang pie
+
+;; double
+(claim double
+  (-> Nat Nat))
+(define double
+  (lambda (n)
+    (iter-Nat n
+      0
+      (lambda (so-far) (add1 (add1 so-far))))))
+
+;; Odd
+(claim Odd
+  (-> Nat U))
+(define Odd
+  (lambda (n)
+    (Sigma ((haf Nat))
+      (= Nat n (add1 (double haf))))))
+
+;; one-is-odd
+(claim one-is-odd
+  (Odd 1))
+(define one-is-odd
+  (cons 0 (same 1)))
+
+;; thirteen-is-odd
+(claim thirteen-is-odd
+  (Odd 13))
+(define thirteed-is-odd
+  (cons 6 (same 13)))
+
+
+

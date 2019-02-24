@@ -1,0 +1,78 @@
+#lang pie
+
+;; One thing that might be true about a type is that all of its proofs of
+;; equality are equal to one another. In newer works, this is called
+;; "being a set" or "being an H-set". Here's a definition in Pie:
+(claim IsSet
+  (-> U
+      U))
+(define IsSet
+  (lambda (X)
+    (Pi ((x X)
+         (y X)
+         (p (= X x y))
+         (q (= X x y)))
+      (= (= X x y) p q))))
+
+;; (Pi ((x Absurd)
+;;      (y Absurd)
+;;      (p (= Absurd x y))
+;;      (q (= Absurd x y)))
+;;   (= (= Absurd x y) p q))
+(claim Absurd-IsSet
+  (IsSet Absurd))
+(define Absurd-IsSet
+  (lambda (x y p q)
+    (ind-Absurd x (= (= Absurd x y) p q))))
+
+;; (Pi ((x Trivial)
+;;      (y Trivial)
+;;      (p (= Trivial x y))
+;;      (q (= Trivial x y)))
+;;   (= (= Trivial x y) p q))
+(claim Trivial-IsSet
+  (IsSet Trivial))
+(define Trivial-IsSet
+  (lambda (x y p q)
+    (ind-= q
+      (lambda (ignore eq)
+        (= (= Trivial x y) p eq))
+      (ind-= p
+        (lambda (ignore eq)
+          (= (= Trivial x y) eq (same x)))
+        (same (same x))))))
+
+;; 所要证明的命题U是(= (= Trivial x y) p q)，它依赖于(= Trivial x y)的证明（p和q）
+;; 因此我们ind-=在q上来得到这个U的证明（注：ind-=在p上也是可以的）
+;; 注意：mot的第二个参数eq的类型依赖于第一个参数ignore， eq : (= Trivial x ignore)
+;; 因此我们所要证的base的类型是 (= (= Trivial x y) p (same x))
+;; 如果我们能证明出这个base，则我们就能证明出(= (= Trivial x y) p q) == ((mot y) q)
+
+;; 现在为了得到base，即要证明的命题U是 (= (= Trivial x y) p (same x))
+;; 因此我们ind-=在p上来得到这个U的证明
+;; 注意：mot的第二个参数eq的类型依赖于第一个参数ignore， eq :(= Trivial x ignore)
+;; 因此我们所要证的base的类型是 (= (= Trivial x y) (same x) (same x))
+;; 如果我们能证明出这个base，则我们就能证明出(= (= Trivial x y) p (same x)) == ((mot y) p)
+;; 这个base显然就是(same (same x))
+
+;; The eta rule was convenient because I could basically ignore x and y.
+(claim Trivial-IsSet2
+  (IsSet Trivial))
+(define Trivial-IsSet2
+  (lambda (x y p q)
+    (ind-= q
+      (lambda (ignore eq)
+        (= (= Trivial sole sole) p eq)) 
+      (ind-= p
+        (lambda (ignore eq)
+          (= (= Trivial sole sole) eq (same sole)))
+        (same (same sole))))))
+
+;; For many years, everyone assumed that every type is a set in this
+;; sense, but Martin Hofmann and Thomas Streicher proved in the 90s that
+;; this is not the case. Most of the types we use in programming are
+;; sets, though, so it's a bit difficult to find good examples of types
+;; that aren't without getting into the newer homotopy type theory work.
+
+;; Being a set is also called "UIP", for "uniqueness of identity
+;; proofs", which means that a proof of equality is unique.

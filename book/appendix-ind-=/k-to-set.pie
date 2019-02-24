@@ -1,0 +1,58 @@
+#lang pie
+
+(claim HasK
+  (-> U
+      U))
+(define HasK
+  (lambda (X)
+    (Pi ((x X)
+         (p (= X x x)))
+      (= (= X x x) p (same x)))))
+
+(claim IsSet
+  (-> U
+      U))
+(define IsSet
+  (lambda (X)
+    (Pi ((x X)
+         (y X)
+         (p (= X x y))
+         (q (= X x y)))
+      (= (= X x y) p q))))
+
+;; The second direction says that, from K, we can get sethood/UIP. This
+;; requires ind-=.
+
+;; (Pi ((X U))
+;;   (-> (Pi ((x X)
+;;            (p (= X x x))) 
+;;         (= (= X x x) p (same x))) ; assume a evidence k of k-rule
+;;       (Pi ((x X)
+;;            (y X)
+;;            (p (= X x y)) ; let x and y be equal Xs. Call the evidence of their equality p.
+;;            (q (= X x y))) ; We want to show that, given _any_ other evidence q that x and y are equal, then p and q are equal.
+;;           (= (= X x y) p q))))
+(claim K->Set
+  (Pi ((X U))
+    (-> (HasK X)
+        (IsSet X))))
+(define K->Set
+  (lambda (X k)
+    (lambda (x y p)
+      (ind-= p
+        (lambda (m eq) ; no parameters were ignored
+          (Pi ((q (= X x m)))
+            (= (= X x m) eq q)))
+        (lambda (q)
+          (symm (k x q)))))))
+
+;; 归纳在p上证明： (Pi ((q (= X x y))) 
+;;                 (= (= X x y) p q))
+;; 抽象p到mot： (lambda (m eq)
+;;               (Pi ((q (= X x m)))
+;;                 (= (= X x m) eq q)))
+;; 我们只需要求出一个base : (Pi ((q (= X x x)))
+;;                          (= (= X x x) (same x) q))
+;; 自然就证明了 (Pi ((q (= X x y)))
+;;               (= (= X x y) p q))
+;; 显然(= (= X x x) (same x) q)的形式 和 k-rule的结论很相似，因此应用k-rule后symm，即得证

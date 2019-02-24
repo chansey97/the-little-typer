@@ -1,0 +1,83 @@
+#lang pie
+
+;; length
+(claim step-length
+  (Pi ((E U))
+    (-> E (List E) Nat
+        Nat)))
+(define step-length
+  (lambda (E)
+    (lambda (e es length_es)
+      (add1 length_es))))
+
+(claim length
+  (Pi ((E U))
+    (-> (List E) Nat)))
+(define length
+  (lambda (E )
+    (lambda (es )
+      (rec-List es
+        0
+        (step-length E)))))
+
+;; replicate
+(claim mot-replicate
+  (-> U Nat
+    U))
+(define mot-replicate
+  (lambda (E k)
+    (Vec E k)))
+
+(claim step-replicate
+  (Pi ((E U)
+       (e E)
+       (l-1 Nat))
+    (-> (mot-replicate E l-1)
+      (mot-replicate E (add1 l-1)))))
+(define step-replicate
+  (lambda (E e l-1)
+    (lambda (step-replicate_l-1)
+      (vec:: e step-replicate_l-1))))
+
+(claim replicate
+  (Pi ((E U)
+       (l Nat))
+    (-> E (Vec E l))))
+(define replicate
+  (lambda (E l)
+    (lambda (e)
+      (ind-Nat l
+        (mot-replicate E)
+        vecnil
+        (step-replicate E e)))))
+
+;; list->vec
+(claim mot-list->vec
+  (Pi ((E U))
+    (-> (List E) U)))
+(define mot-list->vec
+  (lambda (E)
+    (lambda (es)
+      (Vec E (length E es)))))
+
+(claim step-list->vec
+  (Pi ((E U)
+       (e E)
+       (es (List E)))
+    (-> (mot-list->vec E es)
+        (mot-list->vec E (:: e es)))))
+(define step-list->vec
+  (lambda (E e es)
+    (lambda (list->vec_es)
+      (replicate E (length E (:: e es)) e))))
+
+(claim list->vec
+  (Pi ((E U)
+       (es (List E)))
+    (Vec E (length E es))))
+(define list->vec
+  (lambda (E es)
+    (ind-List es
+      (mot-list->vec E)
+      vecnil
+      (step-list->vec E))))

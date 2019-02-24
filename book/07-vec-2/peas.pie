@@ -1,0 +1,36 @@
+#lang pie
+
+;; peas
+(claim mot-peas
+  (-> Nat U))
+(define mot-peas
+  (lambda(k)
+    (Vec Atom k)))
+
+(claim step-peas
+  (Pi ((l-1 Nat))
+    (-> (mot-peas l-1)
+        (mot-peas (add1 l-1)))))
+(define step-peas
+  (lambda (l-1)
+    (lambda (peas_l-1)
+      (vec:: 'pea peas_l-1))))
+
+(claim peas
+  (Pi ((how-many-peas Nat))
+    (Vec Atom how-many-peas)))
+(define peas
+  (lambda (how-many-peas)
+    (ind-Nat how-many-peas
+      mot-peas
+      vecnil
+      step-peas)))
+
+;; (define peas
+;;   (lambda (how-many-peas)
+;;     (ind-Nat how-many-peas
+;;       (lambda (k)
+;;         (Vec Atom k))
+;;       vecnil
+;;       (lambda (n-1 peas-of-n-1)
+;;         (vec:: 'pea peas-of-n-1)))))

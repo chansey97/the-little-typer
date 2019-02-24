@@ -1,0 +1,55 @@
+#lang pie
+
+;; consequence
+(claim =consequence
+  (-> Nat Nat
+      U))
+(define =consequence
+  (lambda (n j)
+    (which-Nat n
+      (which-Nat j
+        Trivial
+        (lambda (j-1)
+          Absurd))
+      (lambda (n-1)
+        (which-Nat j
+          Absurd
+          (lambda (j-1)
+            (= Nat n-1 j-1)))))))
+
+(claim =consequence-same
+  (Pi ((n Nat))
+    (=consequence n n)))
+(define =consequence-same
+  (lambda (n)
+    (ind-Nat n
+      (lambda (k)
+        (=consequence k k))
+      sole
+      (lambda (n-1 =consequence_n-1)
+        (same n-1)))))
+
+;; use-Nat
+(claim use-Nat=
+  (Pi ((n Nat)
+       (j Nat))
+    (-> (= Nat n j)
+        (=consequence n j))))
+(define use-Nat=
+  (lambda (n j)
+    (lambda (n=j)
+      (replace n=j
+        (lambda (k)
+          (=consequence n k))
+        (=consequence-same n)))))
+
+
+;; zero-not-add1 (very important to prove Absurd)
+(claim zero-not-add1
+  (Pi ((n Nat))
+    (-> (= Nat zero (add1 n))
+        Absurd)))
+(define zero-not-add1
+  (lambda (n)
+    (use-Nat= zero (add1 n))))
+

@@ -1,0 +1,61 @@
+#lang pie
+
+;; replicate
+(claim mot-replicate
+  (-> U Nat
+    U))
+(define mot-replicate
+  (lambda (E k)
+    (Vec E k)))
+
+(claim step-replicate
+  (Pi ((E U)
+       (e E)
+       (l-1 Nat))
+    (-> (mot-replicate E l-1)
+      (mot-replicate E (add1 l-1)))))
+(define step-replicate
+  (lambda (E e l-1)
+    (lambda (step-replicate_l-1)
+      (vec:: e step-replicate_l-1))))
+
+(claim replicate
+  (Pi ((E U)
+       (l Nat))
+    (-> E (Vec E l))))
+(define replicate
+  (lambda (E l)
+    (lambda (e)
+      (ind-Nat l
+        (mot-replicate E)
+        vecnil
+        (step-replicate E e)))))
+
+;; list->vec
+(claim copy-52-times
+  (Pi ((E U))
+    (-> E
+        (List E)
+        (Sigma ((l Nat))
+          (Vec E l))
+        (Sigma ((l Nat))
+          (Vec E l)))))
+(define copy-52-times
+  (lambda (E)
+    (lambda (e es copy-52-times_es)
+      (cons 52 (replicate E 52 e)))))
+
+(claim list->vec
+  (Pi ((E U))
+    (-> (List E)
+        (Sigma ((l Nat))
+          (Vec E l)))))
+(define list->vec
+  (lambda (E)
+    (lambda (es)
+      (rec-List es
+        (the (Sigma ((l Nat))
+          (Vec E l)) (cons 0 vecnil))
+        (copy-52-times E)))))
+
+;; (list->vec Atom (:: 'aaa nil))

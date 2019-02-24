@@ -1,0 +1,16 @@
+#lang pie
+
+;; elim-Pair
+(claim elim-Pair
+  (Pi ((A U)
+       (D U)
+       (X U))
+    (-> (Pair A D)
+      (-> A D
+          X)
+      X)))
+(define elim-Pair
+  (lambda (A D X)
+    (lambda (p f)
+      (f (car p) (cdr p)))))
+

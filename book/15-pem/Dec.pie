@@ -1,0 +1,8 @@
+#lang pie
+
+(claim Dec
+  (-> U U))
+(define Dec
+  (lambda (X)
+    (Either X (-> X Absurd))))
+

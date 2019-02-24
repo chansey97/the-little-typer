@@ -1,0 +1,10 @@
+#lang pie
+
+(claim sandwich
+  (-> Atom Atom))
+(define sandwich
+  (lambda (which-sandwich)
+    'delicious))
+
+(the (= Atom (sandwich 'hoagie)
+        (sandwich 'hero)) (same 'delicious))

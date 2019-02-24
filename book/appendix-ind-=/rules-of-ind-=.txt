@@ -1,0 +1,45 @@
+
+(ind-= target
+  mot
+  base)
+
+The Law of ind-=:
+
+  If target is an (= X from to), 
+
+  mot is an 
+
+  (Pi ((x X))
+    (Pi ((t (= X from x)))
+      U))
+
+  base is a
+
+  ((mot from) (same from))
+
+  then 
+
+  (ind-= target
+    mot
+    base)
+
+  is a ((mot to) target)
+
+// 直观的讲，就是已知(= X from to)，如果from满足某个命题U，那么to也满足某个命题U
+// 这很像replace，只不过现在这个U可以依赖于一个(= X from to)的证明（这类似于13-even-odd-1/even-or-odd.pie）
+
+// 注意：ind-=的返回值is a ((mot to) target)
+// to代入mot后返回的类型里的Pi参数t正好是an (= X from to)，与target的类型一致。这使得所要求证的U可以依赖于一个(= X from to)的证明。
+
+// 另一个值的注意的是：mot这个predicate的参数x必须作用于t的类型上的to位置
+// 因为只有这样才能使base-case（断言from）满足这个predicate（第二个参数直接就是(same from)，满足t的类型）
+
+The Commandment of ind-=:
+
+  (ind-= (same expr)
+    mot
+    base)
+
+  is the same ((mot expr) (same expr)) as base
+
+

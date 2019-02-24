@@ -1,0 +1,132 @@
+#lang pie
+
+;; Maybe
+(claim Maybe
+  (-> U U))
+(define Maybe
+  (lambda (X)
+    (Either X Trivial)))
+
+(claim nothing
+  (Pi ((E U))
+    (Maybe E)))
+(define nothing
+  (lambda (E)
+    (right sole)))
+
+(claim just
+  (Pi ((E U))
+    (-> E (Maybe E))))
+(define just
+  (lambda (E e)
+    (left e)))
+
+;; Fin
+(claim Fin
+  (-> Nat U))
+(define Fin
+  (lambda (n)
+    (iter-Nat n
+      Absurd
+      Maybe)))
+
+(claim fzero
+  (Pi ((n Nat))
+    (Fin (add1 n))))
+(define fzero
+  (lambda (n)
+    (nothing (Fin n))))
+
+(claim fadd1
+  (Pi ((n Nat))
+    (-> (Fin n)
+        (Fin (add1 n)))))
+(define fadd1
+  (lambda (n)
+    (lambda (i-1)
+      (just (Fin n) i-1))))
+
+;; vec-ref
+(claim base-vec-ref
+  (Pi ((E U))
+    (-> (Fin zero) (Vec E zero)
+        E)))
+(define base-vec-ref
+  (lambda (E)
+    (lambda (no-value-ever es)
+      (ind-Absurd no-value-ever
+        E))))
+
+(claim step-vec-ref
+  (Pi ((E U)
+       (l-1 Nat))
+    (-> (-> (Fin l-1)
+            (Vec E l-1)
+            E)
+        (-> (Fin (add1 l-1))
+            (Vec E (add1 l-1))
+            E))))
+(define step-vec-ref
+  (lambda (E l-1)
+    (lambda (vec-ref_l-1)
+      (lambda (i es)
+        (ind-Either i
+          (lambda (i)
+            E)
+          (lambda (i-1)
+            (vec-ref_l-1 i-1 (tail es)))
+          (lambda (triv)
+            (head es)))))))
+
+(claim vec-ref
+  (Pi ((E U)
+       (l Nat))
+    (-> (Fin l) (Vec E l)
+        E)))
+(define vec-ref
+  (lambda (E l)
+    (ind-Nat l
+      (lambda (k)
+        (-> (Fin k) (Vec E k)
+            E))
+      (base-vec-ref E)
+      (step-vec-ref E))))
+
+
+;; (claim sandwich
+;;   (-> Atom Atom))
+;; (define sandwich
+;;   (lambda (which-sandwich)
+;;     'delicious))
+
+;; (claim menu
+;;   (Vec Atom 4))
+;; (define menu
+;;   (vec:: 'ratatouille
+;;     (vec:: 'kartoffeimad
+;;       (vec:: (sandwich 'hero)
+;;         (vec:: 'prinsesstarta vecnil)))))
+
+;; ;; first
+;; (vec-ref Atom 4 (fzero 3)
+;;          menu)
+
+;; ;; second
+;; (vec-ref Atom 4 (fadd1 3 (fzero 2))
+;;          menu)
+
+;; ;; third
+;; (vec-ref Atom 4 (fadd1 3 (fadd1 2 (fzero 1))) 
+;;          menu)
+
+;; ;; fourth
+;; (vec-ref Atom 4 (fadd1 3 (fadd1 2 (fadd1 1 (fzero 0)))) 
+;;          menu)
+
+;; fifith
+;; 不可能被构造，因为最后(fzero 0)不能再被分解
+
+;; (fzero 3) : (Fin 4)
+;; (fadd1 3 (fzero 2)) : (Fin 4)
+;; (fadd1 3 (fadd1 2 (fzero 1)))  : (Fin 4)
+;; (fadd1 3 (fadd1 2 (fadd1 1 (fzero 0))))  : (Fin 4)

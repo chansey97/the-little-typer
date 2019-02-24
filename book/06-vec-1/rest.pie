@@ -1,0 +1,11 @@
+#lang pie
+
+;; rest
+(claim rest
+  (Pi ((E U)
+       (l Nat))
+    (-> (Vec E (add1 l)) (Vec E l))))
+(define rest
+  (lambda (E l)
+    (lambda (es)
+      (tail es))))
