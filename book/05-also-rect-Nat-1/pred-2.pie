@@ -1,0 +1,35 @@
+#lang pie-a-let-mode
+
+;; define rec-Nat using iter-nat
+(claim also-rec-Nat
+  (Pi ((X U))
+    (-> Nat
+        X
+        (-> Nat X
+            X)
+        X)))
+(define also-rec-Nat
+  (lambda (X)
+    (lambda (target base step)
+      (car
+       (iter-Nat target
+         (the (Pair X Nat) (cons base 0))
+         (lambda (almost_n-1)
+           (let ((rec-Nat-almost_n-1 (car almost_n-1))
+                 (rec-Nat-n-1 (cdr almost_n-1)))
+             (cons (step rec-Nat-n-1 rec-Nat-almost_n-1)
+               (add1 rec-Nat-n-1)))))))))
+
+;; pred
+(claim pred
+  (-> Nat Nat))
+(define pred
+  (lambda (n)
+    (also-rec-Nat Nat n
+       0
+       (lambda (n-1 almost_n-1)
+         n-1))))
+
+(pred 0)
+(pred 1)
+(pred 5)

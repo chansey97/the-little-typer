@@ -1,0 +1,80 @@
+#lang pie
+
+(claim mot-Nat-has-pred
+  (-> Nat U))
+(define mot-Nat-has-pred
+  (lambda (k)
+    (Sigma ((p Nat))
+      (which-Nat k
+        (= Nat p 0)
+        (lambda (n-1)
+          (= Nat (add1 p) k))))))
+
+(claim step-Nat-has-pred
+  (Pi ((n-1 Nat))
+    (-> (mot-Nat-has-pred n-1)
+        (mot-Nat-has-pred (add1 n-1)))))
+(define step-Nat-has-pred
+  (lambda (n-1 nat-has-pred_n-1)
+    (cons n-1 (same (add1 n-1)))))
+
+(claim Nat-has-pred
+  (Pi ((n Nat))
+    (Sigma ((p Nat))
+      (which-Nat n
+        (= Nat p 0)
+        (lambda (n-1)
+          (= Nat (add1 p) n))))))
+(define Nat-has-pred
+  (lambda (n)
+    (ind-Nat n
+      mot-Nat-has-pred
+      (cons 0 (same 0))
+      step-Nat-has-pred)))
+
+(claim pred
+  (-> Nat Nat))
+(define pred
+  (lambda (n)
+    (car (Nat-has-pred n))))
+
+(pred 0)
+(pred 1)
+(pred 5)
+
+;; If Nat-has-pred defined as following, then we can't simply extract p by using car
+
+;; (claim mot-Nat-has-pred
+;;   (-> Nat U))
+;; (define mot-Nat-has-pred
+;;   (lambda (k)
+;;     (which-Nat k
+;;       (Sigma ((p Nat))
+;;         (= Nat p 0))
+;;       (lambda (k-1)
+;;         (Sigma ((p Nat))
+;;           (= Nat (add1 p) k))))))
+
+;; (claim step-Nat-has-pred
+;;   (Pi ((n-1 Nat))
+;;     (-> (mot-Nat-has-pred n-1)
+;;         (mot-Nat-has-pred (add1 n-1)))))
+;; (define step-Nat-has-pred
+;;   (lambda (n-1 nat-has-pred_n-1)
+;;     (cons n-1 (same (add1 n-1)))))
+
+;; which-Nat is ouside Sigma
+;; (claim Nat-has-pred
+;;   (Pi ((n Nat))
+;;     (which-Nat n
+;;       (Sigma ((p Nat))
+;;         (= Nat p 0))
+;;       (lambda (n-1)
+;;         (Sigma ((p Nat))
+;;           (= Nat (add1 p) n))))))
+;; (define Nat-has-pred
+;;   (lambda (n)
+;;     (ind-Nat n
+;;       mot-Nat-has-pred
+;;       (cons 0 (same 0))
+;;       step-Nat-has-pred)))

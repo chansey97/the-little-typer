@@ -1,0 +1,15 @@
+#lang pie
+
+;; pred
+(claim pred
+  (-> Nat Nat))
+(define pred
+  (lambda (n)
+    (rec-Nat n
+       0
+       (lambda (n-1 almost_n-1)
+         n-1))))
+
+(pred 0)
+(pred 1)
+(pred 5)

@@ -1,0 +1,33 @@
+#lang pie
+
+;; define pred using iter-nat
+(claim zz
+  (Pair Nat Nat))
+(define zz
+  (cons 0 0))
+
+(claim ss
+  (-> (Pair Nat Nat) (Pair Nat Nat)))
+(define ss
+  (lambda (p)
+    (cons (cdr p) (add1 (cdr p)))))
+
+(claim pred
+  (-> Nat Nat))
+(define pred
+  (lambda (n)
+    (car
+     (iter-Nat n
+       zz
+       ss))))
+
+(pred 0)
+(pred 1)
+(pred 5)
+
+;; It's very like church encoding of pred, someone says it's difficult, now it's easy.
+;; Because in church encoding Nat itself is an eliminator.
+
+;; TODO:
+;; I will write a language of lambda calculus in racket to represent it, since racket cannot display closure code.
+

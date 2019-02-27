@@ -1,0 +1,28 @@
+;; http://thelittletyper.com/errata.html
+;; Page 77
+;; Frame 30 implies that rec-Nat is strictly more powerful than iter-Nat,
+;; while it is in fact possible to derive rec-Nat from iter-Nat using a pair
+;; for the base.
+#lang pie-a-let-mode
+
+;; define rec-Nat using iter-nat
+(claim also-rec-Nat
+  (Pi ((X U))
+    (-> Nat
+        X
+        (-> Nat X
+            X)
+        X)))
+(define also-rec-Nat
+  (lambda (X)
+    (lambda (target base step)
+      (car
+       (iter-Nat target
+         (the (Pair X Nat) (cons base 0))
+         (lambda (almost_n-1)
+           (let ((rec-Nat-almost_n-1 (car almost_n-1))
+                 (rec-Nat-n-1 (cdr almost_n-1)))
+             (cons (step rec-Nat-n-1 rec-Nat-almost_n-1)
+               (add1 rec-Nat-n-1)))))))))
+
+;; TODO: prove also-rec-nat == rec-Nat ??
