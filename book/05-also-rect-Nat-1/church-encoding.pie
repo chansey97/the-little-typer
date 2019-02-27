@@ -108,6 +108,16 @@
 
 ;; (realnat (times c2 c3))
 
+;; iszro
+(define iszro
+  (lambda (m)
+    (m (lambda (x)
+         fls)
+       tru)))
+
+;; (realbool (iszro c0))
+;; (realbool (iszro c2))
+
 ;; pred
 (define zz
   (cons c0 c0))
