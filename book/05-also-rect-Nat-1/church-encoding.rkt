@@ -44,6 +44,27 @@
 ;; (test tru 'v 'w)
 ;; (test fls 'v 'w)
 
+;; Pair
+(define pair
+  (curry
+   (lambda (f s b)
+     (b f s))))
+
+(define fst
+  (curry
+   (lambda (p)
+     (p tru))))
+
+(define snd
+  (curry
+   (lambda (p)
+     (p fls))))
+
+;; test pair
+
+(fst (pair 'a 'b))
+(snd (pair 'a 'b))
+
 ;; Nat
 (define c0
   (curry
